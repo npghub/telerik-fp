@@ -1,8 +1,0 @@
-************* Module test
-test.py:1:0: C0114: Missing module docstring (missing-module-docstring)
-
-------------------------------------------------------------------
-Your code has been rated at 8.75/10 (previous run: 8.75/10, +0.00)
-
-8.75
-Linter failed: Score < threshold value
