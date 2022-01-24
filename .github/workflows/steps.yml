@@ -102,6 +102,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SCA:
+    needs: unit-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -120,7 +121,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: docker build -t $DOCKER_HUB_REPO:nginx-${GITHUB_SHA:0:8} -f nginx.Dockerfile .
+        run: docker build -t $DOCKER_HUB_REPO:nginx-${GITHUB_SHA:0:8} -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
       - name: Push to docker repo
         run: |
           docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
