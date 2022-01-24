@@ -89,29 +89,27 @@ jobs:
         python -m pip install --upgrade pip
         pip install art
         python3 -m doctest test.py
-  # SAST:
-  #   needs: unit-test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #     with:
-  #       fetch-depth: 0
-  #   - name: SonarCloud Scan
-  #     uses: sonarsource/sonarcloud-github-action@master
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SAST:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SCA:
     needs: unit-test
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo code
         uses: actions/checkout@master
-      - name: Setup master
-        uses: snyk/actions/setup@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python@master
-        continue-on-error: true
+        continue-on-error: false
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -119,25 +117,25 @@ jobs:
       - name: Print dir workdir contents
         run: |
           ls -lsa /home/runner/work/telerik-fp/telerik-fp
-  # upload:
-  #   name: Upload custom NGINX image to docker hub repo
-  #   needs: SAST
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 10
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Build
-  #       run: docker build -t $DOCKER_HUB_REPO:nginx-${GITHUB_SHA:0:8} -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
-  #     - name: Push to docker repo
-  #       run: |
-  #         docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
-  #         docker image push --all-tags $DOCKER_HUB_REPO
-  # deploy:
-  #   needs: SAST
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Deploy
-  #     run: echo "Deploying to cluster"
+  upload:
+    name: Upload custom NGINX image to docker hub repo
+    needs: SAST
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: docker build -t $DOCKER_HUB_REPO:nginx-${GITHUB_SHA:0:8} -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
+      - name: Push to docker repo
+        run: |
+          docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
+          docker image push --all-tags $DOCKER_HUB_REPO
+  deploy:
+    needs: SAST
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy
+      run: echo "Deploying to cluster. This is a dummy deployment. Just text ouput and no actual deployment."
 #   DAST:
 #     needs: deploy
 #     runs-on: ubuntu-latest
