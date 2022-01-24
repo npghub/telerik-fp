@@ -89,24 +89,26 @@ jobs:
         python -m pip install --upgrade pip
         pip install art
         python3 -m doctest test.py
-  SAST:
-    needs: unit-test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: SonarCloud Scan
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  # SAST:
+  #   needs: unit-test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #     with:
+  #       fetch-depth: 0
+  #   - name: SonarCloud Scan
+  #     uses: sonarsource/sonarcloud-github-action@master
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SCA:
     needs: unit-test
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo code
         uses: actions/checkout@master
+      - name: Setup master
+        uses: snyk/actions/setup@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python@master
         continue-on-error: true
