@@ -54,7 +54,7 @@ jobs:
     - name: Lint with pylint
       run: |
         python lint_test.py   
-  build:
+# build:
 # this job is not actually needed. Just left it as upload-artifact repo demonstration
 #     needs: [style,lint]
 #     runs-on: ubuntu-latest
