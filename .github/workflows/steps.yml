@@ -130,19 +130,31 @@ jobs:
         run: |
           docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
           docker image push --all-tags $DOCKER_HUB_REPO
+  DAST:
+    name: StackHawk DAST scan
+    needs: upload
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run the newly built app container
+      run: |
+        docker run -p 8080:80 5ko5ko/telerikrepo:latest
+    - uses: actions/checkout@v2
+    - uses: stackhawk/hawkscan-action@v1.3.2
+      with:
+        apiKey: ${{ secrets.HAWK_API_KEY }}
   deploy:
-    needs: SAST
+    needs: DAST
     runs-on: ubuntu-latest
     steps:
     - name: Deploy
       run: echo "Deploying to cluster. This is a dummy deployment. Just text ouput and no actual deployment."
-#   DAST:
-#     needs: deploy
-#     runs-on: ubuntu-latest
-#     steps:
-#     - name: ZAP Scan
-#       uses: zaproxy/action-baseline@v0.6.1
-#       with:
-#        target: 'https://www.zaproxy.org'
+  # DAST:
+  #   needs: deploy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: ZAP Scan
+  #     uses: zaproxy/action-baseline@v0.6.1
+  #     with:
+  #      target: 'https://www.zaproxy.org'
     
 
