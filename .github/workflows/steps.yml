@@ -3,7 +3,7 @@ env:
   DOCKER_HUB_REPO: 5ko5ko/telerikrepo
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
 jobs:
   pre-build:
     runs-on: ubuntu-latest
