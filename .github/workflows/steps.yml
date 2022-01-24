@@ -55,6 +55,7 @@ jobs:
       run: |
         python lint_test.py   
   build:
+#this job is not actually needed. Just left it as upload-artifact repo demonstration
     needs: [style,lint]
     runs-on: ubuntu-latest
     steps:
@@ -68,15 +69,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install art
-    - name: Build container
-      run: echo "Building docker image"
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: test.py
         path: test.py
   unit-test:
-    needs: build
+    needs: [style,lint]
     runs-on: ubuntu-latest
     steps:
     - name: Check out repo code
@@ -87,8 +86,6 @@ jobs:
         python-version: 3.9
     - name: Unit testing
       run: |
-        python -m pip install --upgrade pip
-        pip install art
         python3 -m doctest test.py
   SAST:
     needs: unit-test
@@ -107,15 +104,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo code
-        uses: actions/checkout@v2
-#      - uses: actions/checkout@master
+        uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python@master
-#        continue-on-error: true
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
+      - name: Print dir workdir contents
+        run: |
+          ls -lsa /github/workspace
   upload:
     name: Upload custom NGINX image to docker hub repo
     needs: SAST
