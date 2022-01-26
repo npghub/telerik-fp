@@ -140,12 +140,12 @@ jobs:
       #     docker image push --all-tags $DOCKER_HUB_REPO
   push_manifest:
     name: Update and push the new K manifest
-    # needs: upload
+    needs: upload
     runs-on: ubuntu-latest
     steps:
       - name: Echo tag
         run: |
-          echo ${{ steps.build_get_tag.outputs.tag }}
+          echo ${{ jobs.upload.steps.build_get_tag.outputs.tag }}
       # - name: Checkout config repo
       #   uses: actions/checkout@v2
       #   with:
