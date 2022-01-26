@@ -30,6 +30,9 @@ After the image is built it is deployed to K cluster with ArgoCD.
 To be improved:
 
 1.Monitoring
+
 2.Alerting
+
 3.Notifications
+
 4.Scan for exposed secrets
