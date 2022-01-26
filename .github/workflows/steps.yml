@@ -1,7 +1,6 @@
 name: Telerik Final Project
 env:
   DOCKER_HUB_REPO: 5ko5ko/telerikrepo
-  DOCKER_IMAGE_TAG: nginx-4812838c
 on:
   push:
     branches: ["master"]
@@ -118,21 +117,21 @@ jobs:
   #     - name: Print dir workdir contents
   #       run: |
   #         ls -lsa /home/runner/work/telerik-fp/telerik-fp
-  # upload:
-  #   name: Upload custom NGINX image to docker hub repo
-  #   needs: SAST
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 10
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Build
-  #       env:
-  #         DOCKER_IMAGE_TAG: nginx-${GITHUB_SHA:0:8}
-  #       run: docker build -t $DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
-  #     - name: Push to docker repo
-  #       run: |
-  #         docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
-  #         docker image push --all-tags $DOCKER_HUB_REPO
+  upload:
+    name: Upload custom NGINX image to docker hub repo
+    # needs: SAST
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        env:
+          DOCKER_IMAGE_TAG: nginx-${GITHUB_SHA:0:8}
+        run: docker build -t $DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
+      - name: Push to docker repo
+        run: |
+          docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
+          docker image push --all-tags $DOCKER_HUB_REPO
   push_manifest:
     name: Update and push the new K manifest
     # needs: upload
