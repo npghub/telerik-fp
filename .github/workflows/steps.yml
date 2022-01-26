@@ -151,6 +151,7 @@ jobs:
           cat k8s/deploy_k8.yml
           git config --local user.email "$GITHUB_EMAIL"
           git config --local user.name "$GITHUB_USERNAME"
+          git remote set-url origin https://$GITHUB_USERNAME:${{ secrets.GIT_AUTOPUSH}}@github.com/$GITHUB_USERNAME/telerik-fp-config.git
           git commit -am "Update K manifest"
           git push
 #   DAST:
