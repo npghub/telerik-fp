@@ -152,6 +152,7 @@ jobs:
           git config --local user.email "$GITHUB_EMAIL"
           git config --local user.name "$GITHUB_USERNAME"
           git commit -am "Update K manifest"
+          git push
 #   DAST:
 #     name: StackHawk DAST scan
 # #    needs: upload
