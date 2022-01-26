@@ -140,7 +140,8 @@ jobs:
         with:
           repository: npghub/telerik-fp-config
           persist-credentials: false
-          fetch-depth: 0
+          token: ${{ secrets.GIT_AUTOPUSH}}
+          # fetch-depth: 0
       - name: Update config repo
         env:
           GITHUB_USERNAME: npghub
