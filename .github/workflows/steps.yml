@@ -125,9 +125,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set env
-        run: echo "DOCKER_IMAGE_TAG=${GITHUB_SHA:0:8}"
+        run: DOCKER_IMAGE_TAG=${GITHUB_SHA:0:8}
       - name: Build
-        run: docker build -t $DOCKER_HUB_REPO:$DOCKER_IMAGE_TAG -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
+        run: docker build -t $DOCKER_HUB_REPO:${{ env.DOCKER_IMAGE_TAG }} -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
       - name: Push to docker repo
         run: |
           docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
