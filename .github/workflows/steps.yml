@@ -155,7 +155,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GIT_AUTOPUSH}}
-          branch: ${{ github.ref }}
+          branch: master
 #   DAST:
 #     name: StackHawk DAST scan
 # #    needs: upload
