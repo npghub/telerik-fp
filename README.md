@@ -50,3 +50,8 @@ After the workflow competes successfully and a docker image is uploaded to Docke
  3. Add worklflow process notifications(Slack, Teams, Email, etc.)
  4. Add a job to scan for exposed secrets
  5. Try IaC with Terraform
+
+## Abbreviations used
+- SCA: Software composition analysis 
+- SAST: Static application security testing
+- DAST: Dynamic application security testing
