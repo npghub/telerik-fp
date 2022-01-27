@@ -11,10 +11,10 @@ Later manually deployed to a local Kubernetes cluster(minikube).
 ## Workflow
 
 1. Pre build step - only purpose is to ouput some GitHub variables.
-2. Style and linting on the python code. These are done in parallel. Style is done with **pycodestyle**. Linting is done with **pylint**. Pylint version 2.11.1 had to be used, because job dod not complete with latest.
+2. Style and linting on the python code. These are done in parallel. Style is done with **pycodestyle**. Linting is done with **pylint**. Pylint version 2.11.1 had to be used, because job did not complete with latest.
 3. Unit testing is performed. This job depends on **style** and **lint** jobs. Unit testing is done with **doctest**.
 4. SAST and SCA steps are performed in parallel. **Sonarcloud** is for SAST and **Snyk** for SCA.
-5. Build docker image and upload it to Docker Hub. The image is tagged with 8 symbols from the GitHub SHA and laso with **latest** tag. An extra step was added here to handle image tag for the extra added config repo job. This job depends on SAST and SCA jobs. Image![Docker Image Size (tag)](https://img.shields.io/docker/image-size/5ko5ko/telerikrepo/latest) can be pulled and run standalone with:
+5. Build docker image and upload it to Docker Hub. The image is tagged with 8 symbols from the GitHub SHA and also with **latest** tag. An extra step was added here to handle image tag for the extra added config repo job. This job depends on SAST and SCA jobs. Image![Docker Image Size (tag)](https://img.shields.io/docker/image-size/5ko5ko/telerikrepo/latest) can be pulled and run standalone with:
 
 ```bash
 docker run -p 80:80 5ko5ko/telerikrepo:latest
@@ -26,7 +26,7 @@ http://localhost/cgi-bin/test.cgi
 6. DAST scan. Uses **StackHawk** service and GitHub action to pull, run and security test the running application.
 7. Update the Kubernetes manifest file with the new image tag so ArgoCD can detect and reflect changes. Does a checkout on the config repo, edits the manifest file and then pushes the changes back. This job depends on DAST job. This job was added later(see *)
 
-After the workflow competes successfully and a docker image is uploaded to Docker Hub registry the application is deployed to a locally runing Kubernetes cluster(**minikube**). Deployment is done manually. This later amended using ArgoCD(see *)
+After the workflow completes successfully and a docker image is uploaded to Docker Hub registry the application is deployed to a locally runing Kubernetes cluster(**minikube**). Deployment is done manually. This was later amended using ArgoCD(see *)
 
 
 *Added after project submission:
