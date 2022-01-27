@@ -168,7 +168,7 @@ jobs:
       - name: Checkout config repo
         uses: actions/checkout@v2
         with:
-          repository: 
+          repository: ${CONFIG_REPO}
           persist-credentials: false
           token: ${{ secrets.GIT_AUTOPUSH}}
           # fetch-depth: 0
