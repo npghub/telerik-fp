@@ -164,11 +164,11 @@ jobs:
       - name: Echo tag
         run: |
           echo ${{ needs.upload.outputs.tagoutput }}
-          echo "Config repo:"${CONFIG_REPO}
+          echo "Config repo:"${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}
       - name: Checkout config repo
         uses: actions/checkout@v2
         with:
-          repository: ${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}
+          repository: "${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}"
           persist-credentials: false
           token: ${{ secrets.GIT_AUTOPUSH}}
           # fetch-depth: 0
