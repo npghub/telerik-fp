@@ -36,15 +36,15 @@ After the workflow competes successfully and a docker image is uploaded to Docke
  4. This step is configured to run after a successful DAST scan is completed.
 
 ## This project uses:
-- Python
-- NGINX
-- Docker
-- Minikube
-- Kebernetes
-- ArgoCD
-- Sonarcloud
-- Snyk
-- StackHawk
+- [Python](https://www.python.org/)
+- [NGINX](https://www.nginx.com/)
+- [Docker](https://www.docker.com/)
+- [Minikube](https://minikube.sigs.k8s.io/)
+- [Kebernetes](https://kubernetes.io/)
+- [ArgoCD](https://argoproj.github.io/)
+- [Sonarcloud](https://sonarcloud.io/)
+- [Snyk](https://snyk.io/)
+- [StackHawk](https://www.stackhawk.com/)
 
 
 ## To be improved:
