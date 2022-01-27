@@ -1,38 +1,52 @@
-# telerik-fp
-Final project page
-
+# Telerik Final project
 Uses a simple python program that ouputs some text.
 
 It undergoes style, lint, unit testing, quality and security checks before a docker container is built,
 containing a fcgi set up nginx with the test program copied over.
 If this container is successfully built it is uploaded to a docker repo.
-Another config repo exists where configuration for ArgoCD is stored and Kubernetes manifest is monitored.
+Later manually deployed to a local Kubernetes cluster(minikube).
 
-Style checks are done using pycodestyle.
-Linting is done with pylint version 2.11.1 as later versions give errors.
-Unit testing is done with doctest.
+## Workflow
 
-Quality and security testing is performed using Sonarcloud and Snyk.
-
-Built and uploaded image can be tested with:
-
+1. Pre build step - only purpose is to ouput some GitHub variables.
+2. Style and linting on the python code. These are done in parallel. Style is done with **pycodestyle**. Linting is done with **pylint**.
+3. Unit testing is performed. This job depends on **style** and **lint** jobs. Unit testing is done with **doctest**.
+4. SAST and SCA steps are performed in parallel. **Sonarcloud** is for SAST and **Snyk** for SCA.
+5. Build docker image and upload it to Docker Hub. The image is tagged with 8 symbols from the GitHub SHA and laso with **latest** tag. An extra step was added here to handle image tag for the extra added config repo job. This job depends on SAST and SCA jobs. Image can be pulled and run standalone with:
+```bash
 docker run -p 80:80 5ko5ko/telerikrepo:latest
 
 and then in your browser:
 
 http://localhost/cgi-bin/test.cgi
+```
+6. DAST scan. Uses **StackHawk** service and GitHub action to pull, run and security test the running application.
+7. Update the Kubernetes manifest file with the new image tag so ArgoCD can detect and reflect changes. Does a checkout on the config repo, edits the manifest file and then pushes the changes back. This job depends on DAST job. This job was added later(see *)
 
-There was an extra step which updates the Kubernetes manifest in the config repo with the new image tag,
-but a way to do thi reliably was not found.
+After the workflow competes successfully and a docker image is uploaded to Docker Hub registry the application is deployed to a locally runing Kubernetes cluster(**minikube**). Deployment is done manually. This later amended using ArgoCD(see *)
 
-After the image is built it is deployed to K cluster with ArgoCD.
 
-To be improved:
+*Added after project submission:
+ 1. Another config repo exists where configuration for ArgoCD is stored and Kubernetes manifest is monitored.
+ 2. Rewrite main repo workflow to include an extra step, which updates the Kubernetes manifest in above config repo with the docker image tag
+ 3. ArgoCD is set up to monitor the above config repo and re-deploy the cluster if changes in the manifest are detected.
+ 4. This step is configured to run after a successful DAST scan is completed.
 
-1.Monitoring
+## This project uses:
+- Python
+- NGINX
+- Docker
+- Minikube
+- Kebernetes
+- ArgoCD
+- Sonarcloud
+- Snyk
+- StackHawk
 
-2.Alerting
 
-3.Notifications
-
-4.Scan for exposed secrets
+## To be improved:
+ 1. Add app monitoring(Maybe integrate with NewRelic)
+ 2. Add alerting
+ 3. Add worklflow process notifications(Slack, Teams, Email, etc.)
+ 4. Add a job to scan for exposed secrets
+ 5. Try IaC with Terraform

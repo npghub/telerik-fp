@@ -121,7 +121,7 @@ jobs:
   #         ls -lsa /home/runner/work/telerik-fp/telerik-fp
   upload:
     name: Upload custom NGINX image to docker hub repo
-    needs: SAST
+    needs: [SAST, SCA]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
@@ -140,10 +140,24 @@ jobs:
         run: |
           docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
           docker image push --all-tags $DOCKER_HUB_REPO
+  DAST:
+    name: StackHawk DAST scan
+    needs: upload
+    runs-on: ubuntu-latest
+    steps:
+    - name: Run the newly built app container
+      run: |
+        docker run -p 8080:80 -d 5ko5ko/telerikrepo:latest
+    - name: Check out repo code
+      uses: actions/checkout@v2
+    - name: Run hawk scan
+      uses: stackhawk/hawkscan-action@v1.3.2
+      with:
+        apiKey: ${{ secrets.HAWK_API_KEY }}
   push_manifest:
     name: Update and push the new K manifest
     runs-on: ubuntu-latest
-    needs: upload
+    needs: DAST
     steps:
       - name: Echo tag
         run: |
@@ -167,20 +181,6 @@ jobs:
           git remote set-url origin https://$GITHUB_USERNAME:${{ secrets.GIT_AUTOPUSH}}@github.com/$GITHUB_USERNAME/telerik-fp-config.git
           git commit -am "${{ needs.upload.outputs.tagoutput }}: Update K manifest"
           git push
-  DAST:
-    name: StackHawk DAST scan
-    needs: upload
-    runs-on: ubuntu-latest
-    steps:
-    - name: Run the newly built app container
-      run: |
-        docker run -p 8080:80 -d 5ko5ko/telerikrepo:latest
-    - name: Check out repo code
-      uses: actions/checkout@v2
-    - name: Run hawk scan
-      uses: stackhawk/hawkscan-action@v1.3.2
-      with:
-        apiKey: ${{ secrets.HAWK_API_KEY }}
 #   deploy:
 #     needs: DAST
 #     runs-on: ubuntu-latest
