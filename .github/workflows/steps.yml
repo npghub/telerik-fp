@@ -2,7 +2,7 @@ name: Telerik Final Project
 env:
   DOCKER_HUB_REPO: 5ko5ko/telerikrepo
   MANIFEST_FILE: k8s/deploy_k8.yml
-  CONFIG_REPO: npghub/telerik-fp-config
+  CONFIG_REPO: telerik-fp-config
 on:
   push:
     branches: ["master"]
@@ -168,7 +168,7 @@ jobs:
       - name: Checkout config repo
         uses: actions/checkout@v2
         with:
-          repository: ${CONFIG_REPO}
+          repository: ${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}
           persist-credentials: false
           token: ${{ secrets.GIT_AUTOPUSH}}
           # fetch-depth: 0
@@ -178,7 +178,7 @@ jobs:
           cat ${MANIFEST_FILE}
           git config --local user.email "${{ secrets.GHUB_EMAIL }}"
           git config --local user.name "${{ secrets.GHUB_USERNAME }}"
-          git remote set-url origin https://${{ secrets.GHUB_USERNAME }}:${{ secrets.GIT_AUTOPUSH}}@github.com/${CONFIG_REPO}.git
+          git remote set-url origin https://${{ secrets.GHUB_USERNAME }}:${{ secrets.GIT_AUTOPUSH}}@github.com/${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}.git
           git commit -am "${{ needs.upload.outputs.tagoutput }}: Update K manifest"
           git push
 #   deploy:
