@@ -164,10 +164,11 @@ jobs:
       - name: Echo tag
         run: |
           echo ${{ needs.upload.outputs.tagoutput }}
+          echo "Config repo:"${CONFIG_REPO}
       - name: Checkout config repo
         uses: actions/checkout@v2
         with:
-          repository: $CONFIG_REPO
+          repository: 
           persist-credentials: false
           token: ${{ secrets.GIT_AUTOPUSH}}
           # fetch-depth: 0
