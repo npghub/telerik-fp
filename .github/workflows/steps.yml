@@ -175,8 +175,8 @@ jobs:
       - name: Update config repo
         run: |
           cat ${{ env.MANIFEST_FILE }}
-          grep '${{ env.MANIFEST_FILE }}' ${{ env.MANIFEST_FILE }}
-          sed -i "s/$(grep ${{ env.MANIFEST_FILE }} ${{ env.MANIFEST_FILE }} | awk -F':' '{print $3}')/${{ needs.upload.outputs.tagoutput }}/g" ${{ env.MANIFEST_FILE }}
+          grep ${{ env.DOCKERHUB_REPO }} ${{ env.MANIFEST_FILE }}
+          sed -i "s/$(grep ${{ env.DOCKERHUB_REPO }} ${{ env.MANIFEST_FILE }} | awk -F':' '{print $3}')/${{ needs.upload.outputs.tagoutput }}/g" ${{ env.MANIFEST_FILE }}
           git config --local user.email "${{ secrets.GHUB_EMAIL }}"
           git config --local user.name "${{ secrets.GHUB_USERNAME }}"
           git remote set-url origin https://${{ secrets.GHUB_USERNAME }}:${{ secrets.GIT_AUTOPUSH}}@github.com/${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}.git
