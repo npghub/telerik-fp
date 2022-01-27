@@ -174,8 +174,8 @@ jobs:
           # fetch-depth: 0
       - name: Update config repo
         run: |
-          sed -i "s/$(grep ${MANIFEST_FILE} k8s/deploy_k8.yml | awk -F':' '{print $3}')/${{ needs.upload.outputs.tagoutput }}/g" ${MANIFEST_FILE}
-          cat ${MANIFEST_FILE}
+          cat ${{ env.MANIFEST_FILE }}
+          sed -i "s/$(grep ${{ env.MANIFEST_FILE }} k8s/deploy_k8.yml | awk -F':' '{print $3}')/${{ needs.upload.outputs.tagoutput }}/g" ${{ env.MANIFEST_FILE }}
           git config --local user.email "${{ secrets.GHUB_EMAIL }}"
           git config --local user.name "${{ secrets.GHUB_USERNAME }}"
           git remote set-url origin https://${{ secrets.GHUB_USERNAME }}:${{ secrets.GIT_AUTOPUSH}}@github.com/${{ secrets.GHUB_USERNAME }}/${CONFIG_REPO}.git
