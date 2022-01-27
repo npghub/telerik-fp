@@ -1,7 +1,5 @@
 # Telerik Final project
-![GitHub last commit](https://img.shields.io/github/last-commit/npghub/telerik-fp)
-
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/npghub/telerik-fp/Telerik%20Final%20Project)
+![GitHub last commit](https://img.shields.io/github/last-commit/npghub/telerik-fp) ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/npghub/telerik-fp/Telerik%20Final%20Project)
 
 Uses a simple python program that ouputs some text.
 
@@ -16,8 +14,8 @@ Later manually deployed to a local Kubernetes cluster(minikube).
 2. Style and linting on the python code. These are done in parallel. Style is done with **pycodestyle**. Linting is done with **pylint**. Pylint version 2.11.1 had to be used, because job dod not complete with latest.
 3. Unit testing is performed. This job depends on **style** and **lint** jobs. Unit testing is done with **doctest**.
 4. SAST and SCA steps are performed in parallel. **Sonarcloud** is for SAST and **Snyk** for SCA.
-5. Build docker image and upload it to Docker Hub. The image is tagged with 8 symbols from the GitHub SHA and laso with **latest** tag. An extra step was added here to handle image tag for the extra added config repo job. This job depends on SAST and SCA jobs. Image can be pulled and run standalone with:
-![Docker Image Size (tag)](https://img.shields.io/docker/image-size/5ko5ko/telerikrepo/latest)
+5. Build docker image and upload it to Docker Hub. The image is tagged with 8 symbols from the GitHub SHA and laso with **latest** tag. An extra step was added here to handle image tag for the extra added config repo job. This job depends on SAST and SCA jobs. Image![Docker Image Size (tag)](https://img.shields.io/docker/image-size/5ko5ko/telerikrepo/latest) can be pulled and run standalone with:
+
 ```bash
 docker run -p 80:80 5ko5ko/telerikrepo:latest
 
