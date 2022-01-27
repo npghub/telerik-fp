@@ -136,7 +136,7 @@ jobs:
           DOCKER_IMAGE_TAG: ${GITHUB_SHA:0:8}
         run: |
           echo "::set-output name=tag::${{ env.DOCKER_IMAGE_TAG }}"
-          docker build -t $DOCKER_HUB_REPO:${{ env.DOCKER_IMAGE_TAG }} -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
+          docker build -t ${{ secrets.DOCKER_HUB_REPO }}:${{ env.DOCKER_IMAGE_TAG }} -t $DOCKER_HUB_REPO:latest -f nginx.Dockerfile .
       - name: Push to docker repo
         run: |
           docker login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password ${{ secrets.DOCKER_HUB_PASSWORD }}
